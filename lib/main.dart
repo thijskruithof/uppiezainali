@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 void main() {
   runApp(MyApp());
@@ -63,21 +64,29 @@ class _MyHomePageState extends State<MyHomePage> {
     zoom: 14.4746,
   );
 
-  void _placeUppieMarker() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
+  void _placeUppieMarker() async {
+    await Geolocator.getCurrentPosition().then((position) => setState(() {
+          _markers.clear();
 
-      _markers.clear();
+          _markers.add(Marker(
+              markerId: _uppieMarkerId,
+              position: LatLng(position.latitude, position.longitude)));
+        }));
 
-      _markers.add(Marker(
-          markerId: _uppieMarkerId,
-          position: LatLng(
-              _kGooglePlex.target.latitude, _kGooglePlex.target.longitude)));
-    });
+    // setState(() {
+    // This call to setState tells the Flutter framework that something has
+    // changed in this State, which causes it to rerun the build method below
+    // so that the display can reflect the updated values. If we changed
+    // _counter without calling setState(), then the build method would not be
+    // called again, and so nothing would appear to happen.
+
+//      _markers.clear();
+
+    //   _markers.add(Marker(
+    //       markerId: _uppieMarkerId,
+    //       position: LatLng(
+    //           _kGooglePlex.target.latitude, _kGooglePlex.target.longitude)));
+    // });
   }
 
   @override
